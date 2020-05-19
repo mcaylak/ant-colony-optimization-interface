@@ -12,11 +12,15 @@ import AntResult from "../models/ant-result";
 })
 export class HomeComponent implements OnInit {
 
+  BreakException = {};
+
   @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>;
 
   coords: City[] = [];
   id=0;
+  calculateArray: AntResult;
+  calculateArrayPoints: City[] = [];
 
   constructor(private acoService: AcoService) {
   }
@@ -44,7 +48,7 @@ export class HomeComponent implements OnInit {
     let image = new Image(50,50);
 
     image.onload = ()=> {
-      this.drawShape(x,y);
+      this.drawShape(x,y,'green',1);
       this.ctx.drawImage(image,x,y,40,40);
     }
 
@@ -55,13 +59,14 @@ export class HomeComponent implements OnInit {
     }
   }
   lineOperations(){
-    debugger;
     for (let i= 0 ; i<this.coords.length;i++){
       for(let t=0; t<this.coords.length;t++){
         this.drawLine(this.coords[i].x,
           this.coords[i].y,
           this.coords[t].x,
-          this.coords[t].y);
+          this.coords[t].y,
+          'black',
+          0.1);
       }
     }
   }
@@ -74,27 +79,27 @@ export class HomeComponent implements OnInit {
     return value/10;
   }
 
-  drawLine(x1 , y1 , x2 , y2){
-    debugger;
+  drawLine(x1 , y1 , x2 , y2, color,lineWidth){
     this.ctx.beginPath();
-    this.ctx.strokeStyle = 'black';
+    this.ctx.strokeStyle = color;
     this.ctx.moveTo(x1 + 20 ,y1 +20);
     this.ctx.lineTo(x2 + 20 ,y2 + 20);
-    this.ctx.lineWidth = 0.1;
+    this.ctx.lineWidth = lineWidth;
     this.ctx.stroke();
   }
 
 
-  drawShape(x:number,y:number){
+  drawShape(x:number,y:number,color:string,lineWidth: number){
     this.ctx.beginPath();
-    this.ctx.lineWidth = 1;
+    this.ctx.lineWidth = lineWidth;
     this.ctx.fillStyle = 'red';
-    this.ctx.strokeStyle = 'green';
+    this.ctx.strokeStyle = color;
     this.ctx.arc(x+20, y+20, 30, 0, 2*Math.PI);
     this.ctx.stroke();
   }
 
   clearCanvas() {
+    this.id = 0;
     this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.coords = [];
   }
@@ -105,8 +110,44 @@ export class HomeComponent implements OnInit {
 
   calculate() {
     this.acoService.calculate(this.coords).subscribe((res: AntResult)=>{
-      console.log(res.optimalDistance);
+      this.calculateArray = res;
+      this.calculateArrayPointSettings();
     })
+  }
+
+  private calculateArrayPointSettings() {
+    this.calculateArrayPoints = [];
+    debugger;
+    this.calculateArray.optimalRoutes.forEach(item=>{
+      this.coords.forEach(city => {
+        if(city.id.toString() == item){
+          this.calculateArrayPoints.push(city);
+        }
+      })
+    });
+    this.calculateArrayDraw();
+  }
+
+  private calculateArrayDraw(){
+    debugger;
+    this.drawShape(this.calculateArrayPoints[0].x,this.calculateArrayPoints[0].y,'red',3)
+    for (let i=0;i<this.calculateArrayPoints.length-1;i++){
+      this.drawLine(this.calculateArrayPoints[i].x,
+        this.calculateArrayPoints[i].y,
+        this.calculateArrayPoints[i+1].x,
+        this.calculateArrayPoints[i+1].y,
+        this.getRandomColor(),
+        3);
+    }
+  }
+
+  getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 }
 
