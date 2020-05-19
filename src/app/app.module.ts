@@ -10,6 +10,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
 import {MatSliderModule} from "@angular/material/slider";
 import {FormsModule} from "@angular/forms";
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {FormsModule} from "@angular/forms";
     MatCardModule,
     MatButtonModule,
     MatSliderModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   exports: [

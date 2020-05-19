@@ -1,6 +1,9 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatSliderChange} from "@angular/material/slider";
 import {$e} from "codelyzer/angular/styles/chars";
+import {AcoService} from "../services/aco.service";
+import City from "../models/city";
+import AntResult from "../models/ant-result";
 
 @Component({
   selector: 'app-home',
@@ -12,17 +15,17 @@ export class HomeComponent implements OnInit {
   @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>;
 
-  coords: Line[] = [];
+  coords: City[] = [];
   id=0;
 
-  constructor() {
+  constructor(private acoService: AcoService) {
   }
 
   private ctx: CanvasRenderingContext2D;
-  alpha: number = 1;
-  beta: number = 1;
-  rho: number = 0.5;
-  q: number = 20;
+  alpha: number = 2;
+  beta: number = 3;
+  rho: number = 0.5 ;
+  q: number = 4;
 
   ngOnInit(): void {
     debugger;
@@ -55,10 +58,6 @@ export class HomeComponent implements OnInit {
     debugger;
     for (let i= 0 ; i<this.coords.length;i++){
       for(let t=0; t<this.coords.length;t++){
-
-        console.log('i ' + i );
-        console.log('t ' + t );
-
         this.drawLine(this.coords[i].x,
           this.coords[i].y,
           this.coords[t].x,
@@ -95,11 +94,6 @@ export class HomeComponent implements OnInit {
     this.ctx.stroke();
   }
 
-  getRhoValue() {
-    this.rho = this.rho /10;
-    return this.rho;
-  }
-
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.coords = [];
@@ -108,10 +102,11 @@ export class HomeComponent implements OnInit {
   changeValue($event: MatSliderChange) {
     this.rho = $event.value / 10;
   }
+
+  calculate() {
+    this.acoService.calculate(this.coords).subscribe((res: AntResult)=>{
+      console.log(res.optimalDistance);
+    })
+  }
 }
 
-export class Line {
-  x: number;
-  y: number;
-  id: number;
-}
