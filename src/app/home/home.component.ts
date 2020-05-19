@@ -29,7 +29,6 @@ export class HomeComponent implements OnInit {
     this.ctx = this.canvas.nativeElement.getContext('2d');
   }
 
-  animate(): void {}
 
   mouseEvent($event: MouseEvent) {
     const rect = this.canvas.nativeElement.getBoundingClientRect();
@@ -52,7 +51,6 @@ export class HomeComponent implements OnInit {
       this.lineOperations();
     }
   }
-
   lineOperations(){
     debugger;
     for (let i= 0 ; i<this.coords.length;i++){
