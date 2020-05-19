@@ -24,6 +24,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/custom-theme.scss",
               "src/styles.css"
             ],
             "scripts": []
@@ -119,6 +120,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "aco-front"
+    }
+  },
+  "defaultProject": "aco-front",
+  "cli": {
+    "analytics": "30d41f16-f8ce-42cd-8264-c087e43be2f7"
+  }
 }
