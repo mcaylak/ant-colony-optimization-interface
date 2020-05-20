@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import City from "../models/city";
 import {Observable} from "rxjs";
+import AcoInput from "../models/aco-input";
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,8 @@ export class AcoService {
 
   constructor(private httpClient: HttpClient) { }
 
-  calculate(cities: City[]):Observable<any>{
-    return  this.httpClient.post(this.URL + 'calculate',cities,
+  calculate(acoInput: AcoInput):Observable<any>{
+    return  this.httpClient.post(this.URL + 'calculate',acoInput,
       { headers: new HttpHeaders().set('Content-Type', 'application/json')});
   }
 

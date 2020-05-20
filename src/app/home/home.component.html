@@ -1,94 +1,116 @@
+<ngx-spinner
+  bdColor = "rgba(0, 0, 0, 0.8)"
+  size = "medium" color = "#fff"
+  type = "ball-climbing-dot" [fullScreen] = "true">
+  <p style="color: white" > Loading... </p>
+</ngx-spinner>
+
 <div class="row pt-2">
   <div class="col-md-1">
-    <button type="submit" class="btn btn-outline-success my-2 my-sm-0" (click)="calculate()" >Hesapla</button>
+    <button type="submit" class="btn btn-outline-success my-2 my-sm-0"
+            [disabled]="calculateBtn"
+            (click)="calculate()" >Hesapla</button>
   </div>
   <div class="col-md-1">
     <button type="submit" class="btn btn-outline-danger my-2 my-sm-0" (click)="clearCanvas()">Temizle</button>
   </div>
 </div>
 <div class="row pt-2">
+
   <div class="col-md-8">
     <canvas #canvas width="700" height="500" (click)="mouseEvent($event)"></canvas>
+
   </div>
   <div class="col-md-4">
-    <mat-card>
-      <mat-card-content>
-        <div class="row">
-          <div class="col-md-12">
-            <span><b>AYARLAR</b>  (Karınca koloni algoritması değerleri)</span>
+    <div class="row">
+      <mat-card>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-12">
+              <span><b>AYARLAR</b>  (Karınca koloni algoritması değerleri)</span>
+            </div>
           </div>
-        </div>
-        <div class="row pt-4">
-          <div class="col-md-4" style="padding-top: 13px">
-            <span><b>alpha:</b> {{this.alpha}}</span>
+          <div class="row pt-4">
+            <div class="col-md-4" style="padding-top: 13px">
+              <span><b>alpha:</b> {{this.alpha}}</span>
+            </div>
+            <div class="col-md-8">
+              <mat-slider
+                thumbLabel
+                [displayWith]="formatLabel"
+                tickInterval="1"
+                min="0"
+                max="5"
+                color="warn"
+                [(ngModel)]="alpha">
+              </mat-slider>
+            </div>
           </div>
-          <div class="col-md-8">
-            <mat-slider
-              thumbLabel
-              [displayWith]="formatLabel"
-              tickInterval="1"
-              min="0"
-              max="5"
-              color="warn"
-              [(ngModel)]="alpha">
-            </mat-slider>
+          <div class="row pt-4">
+            <div class="col-md-4" style="padding-top: 13px">
+              <span><b>beta:</b> {{this.beta}}</span>
+            </div>
+            <div class="col-md-8">
+              <mat-slider
+                thumbLabel
+                [displayWith]="formatLabel"
+                tickInterval="1"
+                color="accent"
+                min="0"
+                max="5"
+                [(ngModel)]="beta">
+              </mat-slider>
+            </div>
           </div>
-        </div>
-        <div class="row pt-4">
-          <div class="col-md-4" style="padding-top: 13px">
-            <span><b>beta:</b> {{this.beta}}</span>
-          </div>
-          <div class="col-md-8">
-            <mat-slider
-              thumbLabel
-              [displayWith]="formatLabel"
-              tickInterval="1"
-              color="accent"
-              min="0"
-              max="5"
-              [(ngModel)]="beta">
-            </mat-slider>
-          </div>
-        </div>
-        <div class="row pt-4">
-          <div class="col-md-4" style="padding-top: 13px">
-            <span><b>rho:  </b>{{this.rho}}</span>
-          </div>
-          <div class="col-md-8">
-            <mat-slider
-              thumbLabel
-              [displayWith]="rhoFormatLabel"
-              tickInterval="1"
-              (input)="changeValue($event)"
-              [value]="this.rho*10"
-              min="0"
-              color="primary"
-              max="10"
+          <div class="row pt-4">
+            <div class="col-md-4" style="padding-top: 13px">
+              <span><b>rho:  </b>{{this.rho}}</span>
+            </div>
+            <div class="col-md-8">
+              <mat-slider
+                thumbLabel
+                [displayWith]="rhoFormatLabel"
+                tickInterval="1"
+                (input)="changeValue($event)"
+                [value]="this.rho*10"
+                min="0"
+                color="primary"
+                max="10"
               >
-            </mat-slider>
+              </mat-slider>
+            </div>
           </div>
+          <div class="row pt-4">
+            <div class="col-md-4" style="padding-top: 13px">
+              <span><b>q:  </b>{{this.q}}</span>
+            </div>
+            <div class="col-md-8">
+              <mat-slider
+                thumbLabel
+                [displayWith]="formatLabel"
+                tickInterval="1"
+                min="1"
+                max="10"
+                [(ngModel)]="q">
+              </mat-slider>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <b style="color: darkred">Hesaplama işlemi yapılırken buradaki değeler üzerinden yapılır.</b>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="row pt-2" *ngIf="res">
+      <div class="card bg-light mb-3" style="max-width: 18rem;">
+        <div class="card-header" ><b style="color: darkred">SONUC</b></div>
+        <div class="card-body">
+          <b>Optimum Yol Uzunluğu : </b>
+          <span style="color: green">{{this.calculateArray.optimalDistance}}</span>
         </div>
-        <div class="row pt-4">
-          <div class="col-md-4" style="padding-top: 13px">
-            <span><b>q:  </b>{{this.q}}</span>
-          </div>
-          <div class="col-md-8">
-            <mat-slider
-              thumbLabel
-              [displayWith]="formatLabel"
-              tickInterval="1"
-              min="1"
-              max="10"
-              [(ngModel)]="q">
-            </mat-slider>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <b style="color: darkred">Hesaplama işlemi yapılırken buradaki değeler üzerinden yapılır.</b>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </div>
   </div>
 </div>

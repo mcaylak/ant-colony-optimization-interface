@@ -1,0 +1,225 @@
+
+<div class="container pt-4">
+
+ <div class="row">
+   <div class="col-md-8">
+     <div class="form-group">
+
+       <b>Konum Bilgisi Seçerek Karınca Koloni Algoritmasını Uygulayın</b>
+
+     </div>
+
+     <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
+       <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
+                   (dragEnd)="markerDragEnd($event)"></agm-marker>
+       <agm-polyline [strokeColor]="'#2196f3'" *ngIf="this.result.length > 0" >
+         <ng-container *ngFor="let item of this.result">
+            <agm-polyline-point [latitude]="item.latitude" [longitude]="item.longitude">
+            </agm-polyline-point>
+         </ng-container>
+       </agm-polyline>
+     </agm-map>
+   </div>
+
+   <div class="col-md-4">
+     <mat-tab-group>
+       <mat-tab label="Konum Detay">
+         <div class="row pt-2">
+           <div class="col-md-12">
+             <table class="table ">
+               <thead>
+               <tr>
+                 <th scope="col">#</th>
+                 <th scope="col">Enlem</th>
+                 <th scope="col">Boylam</th>
+                 <th scope="col">Adres</th>
+               </tr>
+               </thead>
+               <tbody>
+               <tr>
+                 <th scope="row">
+                   <a href="javascript:void(0)" (click)="saveLocation()">
+             <span class="material-icons">
+              note_add
+           </span>
+                   </a>
+                 </th>
+                 <td [matTooltip]="this.latitude">{{latitude.toString().substring(0,8)}}</td>
+                 <td [matTooltip]="this.longitude">{{longitude.toString().substring(0,8)}}</td>
+                 <td [matTooltip]="this.address">{{address.substring(0,10)}} ...</td>
+               </tr>
+               </tbody>
+             </table>
+           </div>
+         </div>
+
+       </mat-tab>
+       <mat-tab label="Genel Ayalar">
+
+         <div class="row">
+           <mat-card>
+             <mat-card-content>
+               <div class="row">
+                 <div class="col-md-12">
+                   <span><b>AYARLAR</b>  (Karınca koloni algoritması değerleri)</span>
+                 </div>
+               </div>
+               <div class="row pt-4">
+                 <div class="col-md-4" style="padding-top: 13px">
+                   <span><b>alpha:</b> {{this.alpha}}</span>
+                 </div>
+                 <div class="col-md-8">
+                   <mat-slider
+                     thumbLabel
+                     [displayWith]="formatLabel"
+                     tickInterval="1"
+                     min="0"
+                     max="5"
+                     color="warn"
+                     [(ngModel)]="alpha">
+                   </mat-slider>
+                 </div>
+               </div>
+               <div class="row pt-4">
+                 <div class="col-md-4" style="padding-top: 13px">
+                   <span><b>beta:</b> {{this.beta}}</span>
+                 </div>
+                 <div class="col-md-8">
+                   <mat-slider
+                     thumbLabel
+                     [displayWith]="formatLabel"
+                     tickInterval="1"
+                     color="accent"
+                     min="0"
+                     max="5"
+                     [(ngModel)]="beta">
+                   </mat-slider>
+                 </div>
+               </div>
+               <div class="row pt-4">
+                 <div class="col-md-4" style="padding-top: 13px">
+                   <span><b>rho:  </b>{{this.rho}}</span>
+                 </div>
+                 <div class="col-md-8">
+                   <mat-slider
+                     thumbLabel
+                     [displayWith]="rhoFormatLabel"
+                     tickInterval="1"
+                     (input)="changeValue($event)"
+                     [value]="this.rho*10"
+                     min="0"
+                     color="primary"
+                     max="10"
+                   >
+                   </mat-slider>
+                 </div>
+               </div>
+               <div class="row pt-4">
+                 <div class="col-md-4" style="padding-top: 13px">
+                   <span><b>q:  </b>{{this.q}}</span>
+                 </div>
+                 <div class="col-md-8">
+                   <mat-slider
+                     thumbLabel
+                     [displayWith]="formatLabel"
+                     tickInterval="1"
+                     min="1"
+                     max="10"
+                     [(ngModel)]="q">
+                   </mat-slider>
+                 </div>
+               </div>
+               <div class="row">
+                 <div class="col-md-12">
+                   <b style="color: darkred">Hesaplama işlemi yapılırken buradaki değeler üzerinden yapılır.</b>
+                 </div>
+               </div>
+             </mat-card-content>
+           </mat-card>
+         </div>
+
+
+       </mat-tab>
+     </mat-tab-group>
+   </div>
+ </div>
+
+  <div class="row pt-4">
+    <div class="col-md-8" *ngIf="this.locations.length > 0">
+      <div class="row">
+        <div class="col-md-3 pt-3 ">
+          <span><b>Kayıtlı Konum Bilgisi</b></span>
+        </div>
+        <div class="col-md-9 mb-2">
+          <div class="row text-right">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+              <button type="submit" class="btn btn-outline-danger my-2 my-sm-0"
+                      (click)="clearList()" >Temizle</button>
+            </div>
+            <div class="col-md-2 text-right">
+              <button type="submit" class="btn btn-outline-success my-2 my-sm-0"
+                      (click)="calculate()" >Hesapla</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Enlem</th>
+              <th scope="col">Boylam</th>
+              <th scope="col">Adres</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of this.locations">
+              <th scope="row">
+                {{item.id}}
+              </th>
+              <td>{{item.latitude}}</td>
+              <td>{{item.longitude}}</td>
+              <td [matTooltip]="this.address">{{item.address.substring(0,20)}} ...</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-12">
+              <b>Sonuç Sıralaması</b>
+            </div>
+          </div>
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Enlem</th>
+              <th scope="col">Boylam</th>
+              <th scope="col">Adres</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let res of this.result">
+              <th scope="row">
+                {{res.id}}
+              </th>
+              <td>{{res.latitude}}</td>
+              <td>{{res.longitude}}</td>
+              <td [matTooltip]="res.address">{{res.address.substring(0,20)}} ...</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

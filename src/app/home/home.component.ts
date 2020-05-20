@@ -1,9 +1,11 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatSliderChange} from "@angular/material/slider";
-import {$e} from "codelyzer/angular/styles/chars";
 import {AcoService} from "../services/aco.service";
 import City from "../models/city";
 import AntResult from "../models/ant-result";
+import {NgxSpinnerService} from "ngx-spinner";
+import AcoOptions from "../models/aco-options";
+import AcoInput from "../models/aco-input";
 
 @Component({
   selector: 'app-home',
@@ -22,7 +24,9 @@ export class HomeComponent implements OnInit {
   calculateArray: AntResult;
   calculateArrayPoints: City[] = [];
 
-  constructor(private acoService: AcoService) {
+
+  constructor(private acoService: AcoService,
+              private spinner: NgxSpinnerService) {
   }
 
   private ctx: CanvasRenderingContext2D;
@@ -30,10 +34,15 @@ export class HomeComponent implements OnInit {
   beta: number = 3;
   rho: number = 0.5 ;
   q: number = 4;
+  iterNum: number = 1000;
+  antsNum: number = 100;
+  res: boolean = false;
+  calculateBtn: boolean = false;
 
   ngOnInit(): void {
     debugger;
     this.ctx = this.canvas.nativeElement.getContext('2d');
+
   }
 
 
@@ -89,6 +98,14 @@ export class HomeComponent implements OnInit {
   }
 
 
+  showSpinner(){
+    this.spinner.show();
+  }
+
+  hideSpinner(){
+    this.spinner.hide();
+  }
+
   drawShape(x:number,y:number,color:string,lineWidth: number){
     this.ctx.beginPath();
     this.ctx.lineWidth = lineWidth;
@@ -99,6 +116,8 @@ export class HomeComponent implements OnInit {
   }
 
   clearCanvas() {
+    this.calculateBtn = false;
+    this.res = false;
     this.id = 0;
     this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.coords = [];
@@ -109,9 +128,16 @@ export class HomeComponent implements OnInit {
   }
 
   calculate() {
-    this.acoService.calculate(this.coords).subscribe((res: AntResult)=>{
-      this.calculateArray = res;
-      this.calculateArrayPointSettings();
+    this.showSpinner();
+    this.acoService
+        .calculate(
+          AcoInput.of(this.coords,AcoOptions.of(this.alpha,this.beta,this.iterNum,this.antsNum,this.rho,this.q)))
+          .subscribe((result: AntResult)=>{
+            this.hideSpinner();
+            console.warn(result);
+            this.calculateArray = result;
+            this.res = true;
+            this.calculateArrayPointSettings();
     })
   }
 

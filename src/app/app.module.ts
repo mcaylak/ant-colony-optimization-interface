@@ -11,12 +11,19 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatSliderModule} from "@angular/material/slider";
 import {FormsModule} from "@angular/forms";
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import {NgCircleProgressModule} from "ng-circle-progress";
+import {NgxSpinnerModule} from "ngx-spinner";
+import {AgmCoreModule} from "@agm/core";
+import { MapComponent } from './map/map.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatTabsModule} from "@angular/material/tabs";
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    HomeComponent
+    HomeComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
@@ -26,10 +33,19 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
     MatButtonModule,
     MatSliderModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgCircleProgressModule,
+    NgxSpinnerModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCwLByXGWaCTOWmngwjhp9hk8hiG2MOFyw',
+      libraries: ['places']
+    }),
+    MatTooltipModule,
+    MatTabsModule,
   ],
   providers: [],
   exports: [
+
   ],
   bootstrap: [AppComponent]
 })
