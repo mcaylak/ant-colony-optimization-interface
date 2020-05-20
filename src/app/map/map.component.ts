@@ -140,7 +140,7 @@ export class MapComponent implements OnInit {
   calculate() {
     this.acoService.calculate(AcoInput.of(this.getCityType(),
       AcoOptions.of(this.alpha,this.beta,this.iterNum,this.antsNum,this.rho,this.q))).subscribe((res:AntResult)=>{
-        console.log(res);
+        console.log("res" + res);
         res.optimalRoutes.forEach(value => {
           this.locations.forEach(item=>{
             if(value == item.id.toString()){

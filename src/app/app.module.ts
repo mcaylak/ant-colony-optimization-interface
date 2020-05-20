@@ -17,13 +17,15 @@ import {AgmCoreModule} from "@agm/core";
 import { MapComponent } from './map/map.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatTabsModule} from "@angular/material/tabs";
+import { IntroComponent } from './intro/intro.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     HomeComponent,
-    MapComponent
+    MapComponent,
+    IntroComponent
   ],
   imports: [
     BrowserModule,
