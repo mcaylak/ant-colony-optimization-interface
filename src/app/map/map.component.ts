@@ -6,6 +6,7 @@ import AcoInput from "../models/aco-input";
 import City from "../models/city";
 import AcoOptions from "../models/aco-options";
 import AntResult from "../models/ant-result";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-map',
@@ -42,7 +43,8 @@ export class MapComponent implements OnInit {
   constructor(
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
-    private acoService: AcoService
+    private acoService: AcoService,
+    private spinner: NgxSpinnerService
   ) { }
 
 
@@ -155,6 +157,7 @@ export class MapComponent implements OnInit {
   }
 
   calculate() {
+    this.showSpinner();
     this.calculateBtn = true;
     this.acoService.calculate(AcoInput.of(this.getCityType(),
       AcoOptions.of(this.alpha,this.beta,this.iterNum,this.antsNum,this.rho,this.q))).subscribe((res:AntResult)=>{
@@ -166,6 +169,7 @@ export class MapComponent implements OnInit {
             }
           })
         })
+      this.hideSpinner();
     });
   }
 
@@ -179,6 +183,15 @@ export class MapComponent implements OnInit {
       })
     })
     return city;
+  }
+
+
+  showSpinner(){
+    this.spinner.show();
+  }
+
+  hideSpinner(){
+    this.spinner.hide();
   }
 
   clearList() {
