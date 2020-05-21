@@ -18,6 +18,10 @@ import { MapComponent } from './map/map.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatTabsModule} from "@angular/material/tabs";
 import { IntroComponent } from './intro/intro.component';
+import { AboutComponent } from './about/about.component';
+import {MatIconModule} from "@angular/material/icon";
+import {FaIconLibrary, FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {fab, faFacebook} from "@fortawesome/free-brands-svg-icons";
 
 @NgModule({
   declarations: [
@@ -25,7 +29,8 @@ import { IntroComponent } from './intro/intro.component';
     HeaderComponent,
     HomeComponent,
     MapComponent,
-    IntroComponent
+    IntroComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,
@@ -44,11 +49,19 @@ import { IntroComponent } from './intro/intro.component';
     }),
     MatTooltipModule,
     MatTabsModule,
+    MatIconModule,
+    FontAwesomeModule
   ],
   providers: [],
   exports: [
-
+    FontAwesomeModule
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fab);
+  }
+
+}

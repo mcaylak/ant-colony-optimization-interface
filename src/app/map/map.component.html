@@ -145,7 +145,7 @@
  </div>
 
   <div class="row pt-4">
-    <div class="col-md-8" *ngIf="this.locations.length > 0">
+    <div class="col-md-12" *ngIf="this.locations.length > 0">
       <div class="row">
         <div class="col-md-3 pt-3 ">
           <span><b>Kayıtlı Konum Bilgisi</b></span>
@@ -188,7 +188,7 @@
           </table>
         </div>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="this.result.length > 0">
         <div class="col-md-12">
           <div class="row">
             <div class="col-md-12">

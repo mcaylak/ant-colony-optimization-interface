@@ -23,6 +23,7 @@ export class MapComponent implements OnInit {
   antsNum: number = 100;
 
   result: CalculateLocation[] = [];
+  markers: Marker[] = [];
   latitude: number;
   longitude: number;
   zoom: number;
@@ -182,5 +183,17 @@ export class CalculateLocation{
     cl.latitude = latitude;
     cl.longitude = longitude;
     return cl;
+  }
+}
+
+export class Marker {
+  latitude: number;
+  longitude: number;
+
+  static of(latitude,longitude){
+    const m = new Marker();
+    m.latitude = latitude;
+    m.longitude = longitude;
+    return m;
   }
 }

@@ -128,6 +128,7 @@ export class HomeComponent implements OnInit {
   }
 
   calculate() {
+    this.calculateBtn = true;
     this.showSpinner();
     this.acoService
         .calculate(
