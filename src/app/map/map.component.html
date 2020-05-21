@@ -9,9 +9,13 @@
 
      </div>
 
-     <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
+     <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="5">
        <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
                    (dragEnd)="markerDragEnd($event)"></agm-marker>
+
+       <agm-circle *ngFor="let item of this.markers" [latitude]="item.latitude" [longitude]="item.longitude" [radius]="50000"
+                   [fillColor]="'red'" ></agm-circle>
+
        <agm-polyline [strokeColor]="'#2196f3'" *ngIf="this.result.length > 0" >
          <ng-container *ngFor="let item of this.result">
             <agm-polyline-point [latitude]="item.latitude" [longitude]="item.longitude">
@@ -159,7 +163,7 @@
             </div>
             <div class="col-md-2 text-right">
               <button type="submit" class="btn btn-outline-success my-2 my-sm-0"
-                      (click)="calculate()" >Hesapla</button>
+                      (click)="calculate()" [disabled]="this.calculateBtn" >Hesapla</button>
             </div>
           </div>
         </div>

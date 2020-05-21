@@ -34,6 +34,9 @@ export class MapComponent implements OnInit {
 
   @ViewChild('search')
   public searchElementRef: ElementRef;
+  calculateBtn: boolean = false;
+  urlIcon: '../../assets/point.png';
+  radius = 5000;
 
 
   constructor(
@@ -99,6 +102,7 @@ export class MapComponent implements OnInit {
 
   markerDragEnd($event: MouseEvent) {
     console.log($event);
+    debugger;
     this.latitude = $event.coords.lat;
     this.longitude = $event.coords.lng;
     this.getAddress(this.latitude, this.longitude);
@@ -122,6 +126,18 @@ export class MapComponent implements OnInit {
   }
 
   saveLocation() {
+    const icon = {
+
+      path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
+      fillColor: '#FF0000',
+      fillOpacity: .6,
+      // @ts-ignore
+      anchor: new google.maps.Point(0,0),
+      strokeWeight: 0,
+      scale:  0.5
+    }
+    this.markers.push(Marker.of(this.latitude,this.longitude));
+
 
     let val = -1;
     this.locations.forEach(item=>{
@@ -139,6 +155,7 @@ export class MapComponent implements OnInit {
   }
 
   calculate() {
+    this.calculateBtn = true;
     this.acoService.calculate(AcoInput.of(this.getCityType(),
       AcoOptions.of(this.alpha,this.beta,this.iterNum,this.antsNum,this.rho,this.q))).subscribe((res:AntResult)=>{
         console.log("res" + res);
@@ -165,8 +182,11 @@ export class MapComponent implements OnInit {
   }
 
   clearList() {
+    this.markers = [];
+    this.calculateBtn = false;
     this.locations = [];
     this.result = [];
+    this.id = 0;
   }
 }
 
